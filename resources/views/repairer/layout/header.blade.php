@@ -17,12 +17,12 @@
     <div class="sidebar">
         <h3 class="text-center mb-4"><i class="bi bi-tools"></i> Repairer</h3>
         <a href="{{url('/Repairer-dashboard')}}"><i class="bi bi-house"></i> Dashboard</a>
-        <a href="#"><i class="bi bi-shop"></i> My Garage</a>
+        <a href="{{route('garage.index')}}"><i class="bi bi-shop"></i> My Garage</a>
         
         <a href="#"><i class="bi bi-calendar-check"></i> Bookings</a>
         <a href="#"><i class="bi bi-cash"></i> Earnings</a>
         <a href="{{url('/Repairer-profile')}}"><i class="bi bi-person"></i> Profile</a>
-        <a href="{{url('/logout')}}"><i class="bi bi-box-arrow-right"></i> Logout</a>
+        <a href="{{route('logout')}}"><i class="bi bi-box-arrow-right"></i> Logout</a>
     </div>
 
     <!-- Main Content -->

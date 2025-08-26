@@ -15,9 +15,11 @@ return new class extends Migration {
             $table->unsignedBigInteger('repairer_id'); // FK from repairers table
             $table->string('garage_name');
             $table->string('garage_address')->nullable();
+           
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
             $table->string('garage_image')->nullable();
+            $table->json('services')->nullable();
             $table->timestamps();
 
             $table->foreign('repairer_id')->references('id')->on('repairers')->onDelete('cascade');

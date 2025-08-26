@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\GarageController;
 use App\Http\Controllers\RepairersController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminAuthAfter;
@@ -29,7 +30,7 @@ Route::middleware('user.afterlogin')->group(function () {
     Route::get('/Profile', [UserController::class, 'profile']);
     Route::get('/Edit/{id}', [UserController::class, 'edit']);
     Route::post('/Update/{id}', [UserController::class, 'update']);
-    Route::get('/logout', [UserController::class, 'logout']);
+    Route::get('/UserLogout', [UserController::class, 'logout']);
 });
 
 //----------------------------Repairer Route ------------------------------
@@ -40,7 +41,8 @@ Route::middleware('repairer.beforelogin')->group(function () {
     Route::post('/Repairer-Login', [RepairersController::class, 'loginauth']);
 
 });
-//Dashboard\
+
+//
 Route::middleware('repairer.afterlogin')->group(function () {
 
 
@@ -51,8 +53,17 @@ Route::middleware('repairer.afterlogin')->group(function () {
     Route::get('/Repairer-profile', [RepairersController::class, 'show']);
     Route::get('/Repairer-profile-edit/{id}', [RepairersController::class, 'edit']);
     Route::post('/Repairer-profile-edit/{id}', [RepairersController::class, 'update']);
-    Route::get('/logout', [RepairersController::class, 'logout']);
+
+    Route::get('/logout', [RepairersController::class, 'logout'])->name('logout');
+
+
+    //--------------------------Garage Route ------------------------------------
+   // web.php
+Route::get('/garage.index', [GarageController::class, 'index'])->name('garage.index');
+
+Route::get('/garage.insert', [GarageController::class, 'create'])->name('garage.insert');
 });
+
 
 
 

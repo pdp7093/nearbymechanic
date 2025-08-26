@@ -16,7 +16,7 @@
       <a href="#" class="d-block py-2 px-2 text-white text-decoration-none"><i class="bi bi-book me-2"></i>My Bookings</a>
       <a href="#" class="d-block py-2 px-2 text-white text-decoration-none"><i class="bi bi-gear me-2"></i>Settings</a> 
       <a href="#" class="d-block py-2 px-2 text-white text-decoration-none"><i class="bi bi-question-circle me-2"></i>Help</a>
-      <a href="{{url('/logout')}}" class="d-block py-2 px-2 text-danger text-decoration-none"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
+      <a href="{{url('/UserLogout')}}" class="d-block py-2 px-2 text-danger text-decoration-none"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
     </div>
 
     <!-- Main Content -->

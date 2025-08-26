@@ -32,6 +32,7 @@ class RepairersController extends Controller
         //
         return view('repairer.login');
     }
+    
     //
     public function loginauth(Request $request){
          $validated = $request->validate([
