@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 //----------------------------User Route ---------------------------------
 
 //Signup & Login Route
@@ -62,6 +63,7 @@ Route::middleware('repairer.afterlogin')->group(function () {
 Route::get('/garage.index', [GarageController::class, 'index'])->name('garage.index');
 
 Route::get('/garage.insert', [GarageController::class, 'create'])->name('garage.insert');
+Route::post('/garage.insert', [GarageController::class, 'store'])->name('garage.insert');
 });
 
 

@@ -6,13 +6,13 @@
 
     @if($garage)
     <div class="card shadow p-3">
-        <h5>{{ $garage->name }}</h5>
-        <p><b>Address:</b> {{ $garage->address }}</p>
-        <p><b>Service:</b> {{ $garage->service }}</p>
+        <h5>{{ $garage->garage_name }}</h5>
+        <p><b>Address:</b> {{ $garage->garage_address }}</p>
+       
         <p><b>Open Time:</b> {{ $garage->opentime }}</p>
         <p><b>Close Time:</b> {{ $garage->closetime }}</p>
 
-        <a href="{{ route('garage.edit') }}" class="btn btn-primary mt-3">
+        <a href="" class="btn btn-primary mt-3">
             Edit Garage
         </a>
     </div>

@@ -1,127 +1,82 @@
-@extends('repaiere.layouts.main')
-
+@extends('repairer.layout.main')
 @section('main')
-<div class="container">
-    <h2>Add New Garage</h2>
-    <form action="" method="POST" enctype="multipart/form-data">
+
+<div class="container mt-4">
+    <h3 class="mb-3">Setup Your Garage</h3>
+    <form method="POST" action="{{route('garage.insert')}}" enctype="multipart/form-data">
         @csrf
 
         <!-- Garage Name -->
         <div class="mb-3">
-            <label for="garage_name" class="form-label">Garage Name</label>
-            <input type="text" class="form-control" id="garage_name" name="garage_name" required>
+            <label class="form-label">Garage Name</label>
+            <input type="text" name="garage_name" class="form-control" required>
         </div>
 
-        <!-- Address Search -->
+        <!-- Address -->
         <div class="mb-3">
-            <label for="garage_address" class="form-label">Garage Address (Search)</label>
-            <input type="text" class="form-control" id="garage_address" name="garage_address" placeholder="Search location..." required>
+            <label class="form-label">Address</label>
+            <textarea name="garage_address" class="form-control" required></textarea>
         </div>
 
-        <!-- Lat & Lng -->
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="latitude" class="form-label">Latitude</label>
-                <input type="text" class="form-control" id="latitude" name="latitude" readonly>
+        <!-- Opening & Closing Time -->
+        <div class="row mb-3">
+            <div class="col">
+                <label class="form-label">Opening Time</label>
+                <input type="time" name="opentime" class="form-control" required>
             </div>
-            <div class="col-md-6 mb-3">
-                <label for="longitude" class="form-label">Longitude</label>
-                <input type="text" class="form-control" id="longitude" name="longitude" readonly>
-            </div>
-        </div>
-
-        <!-- Map Picker -->
-        <div class="mb-3">
-            <button type="button" class="btn btn-sm btn-primary mb-2" onclick="initMap()">Pick from Map</button>
-            <div id="map" style="width: 100%; height: 400px; display:none;"></div>
-        </div>
-
-        <!-- Garage Image -->
-        <div class="mb-3">
-            <label for="garage_image" class="form-label">Garage Image</label>
-            <input type="file" class="form-control" id="garage_image" name="garage_image">
-        </div>
-
-        <!-- Services -->
-        <div class="mb-3">
-            <label for="services" class="form-label">Services</label>
-            <select class="form-select" id="services" name="services[]" multiple>
-                <option value="Repair">Repair</option>
-                <option value="Towing">Towing</option>
-                <option value="Tyres">Tyres</option>
-                <option value="Battery">Battery</option>
-            </select>
-        </div>
-
-        <!-- Open/Close Time -->
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="opentime" class="form-label">Open Time</label>
-                <input type="time" class="form-control" id="opentime" name="opentime">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="closetime" class="form-label">Close Time</label>
-                <input type="time" class="form-control" id="closetime" name="closetime">
+            <div class="col">
+                <label class="form-label">Closing Time</label>
+                <input type="time" name="closetime" class="form-control" required>
             </div>
         </div>
 
-        <button type="submit" class="btn btn-success">Save Garage</button>
+        <!-- Garage Photos -->
+        <div class="mb-3">
+            <label class="form-label">Garage Photos</label>
+            <input type="file" name="garage_image" class="form-control" multiple>
+        </div>
+
+        <!-- Hidden Fields for Map Lat/Long -->
+        <input type="hidden" name="latitude" id="latitude">
+        <input type="hidden" name="longitude" id="longitude">
+
+        <!-- Map Section -->
+        <div class="mb-3">
+            <label class="form-label">Select Garage Location</label>
+            <div id="map" style="width:100%; height:400px;"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Garage</button>
     </form>
 </div>
-@endsection
 
-@section('scripts')
-<!-- MapMyIndia SDK -->
-<script src="https://apis.mapmyindia.com/advancedmaps/v1/6deac0d4-6830-465e-869b-0a7351e7822f/map_load?v=1.5"></script>
-<script src="https://apis.mapmyindia.com/advancedmaps/api/6deac0d4-6830-465e-869b-0a7351e7822f/map_sdk_plugins"></script>
+<!-- MapMyIndia Scripts -->
+<script src="https://apis.mappls.com/advancedmaps/api/14e5dce8-3fa5-4743-b66b-4549479ee5a7/map_sdk?layer=vector&v=3.0&callback=initMap1"></script>
+<script src="https://apis.mappls.com/advancedmaps/api/14e5dce8-3fa5-4743-b66b-4549479ee5a7/map_sdk_plugins?v=3.0"></script>
 
 <script>
-    // Autocomplete Search
-    var auto = new MapmyIndia.placeAutocomplete(document.getElementById("garage_address"), {
-        callback: function (data) {
-            if (data && data.latitude && data.longitude) {
-                document.getElementById("latitude").value = data.latitude;
-                document.getElementById("longitude").value = data.longitude;
+    var map, picker;
+    function initMap1() {
+        map = new mappls.Map('map', {
+            center: [28.62, 77.09], // Default India Center
+            zoom: 5
+        });
+
+        map.addListener('load', function() {
+            var options = { map: map, header: true, closeBtn: true };
+            mappls.placePicker(options, callback);
+
+            function callback(data) {
+                picker = data;
+                if (picker.data !== undefined) {
+                    alert('Location capture successfully');
+                    // Fill Lat & Long in Hidden Inputs
+                    document.getElementById("latitude").value = picker.data.lat;
+                    document.getElementById("longitude").value = picker.data.lng;
+                }
             }
-        }
-    });
-
-    // Map Picker
-    let map, marker;
-    function initMap() {
-        document.getElementById("map").style.display = "block";
-
-        map = new MapmyIndia.Map("map", {
-            center: [28.61, 77.23], // Default center (Delhi)
-            zoom: 12
         });
-
-        marker = new L.marker([28.61, 77.23], {draggable: true}).addTo(map);
-
-        marker.on('dragend', function(e) {
-            let lat = marker.getLatLng().lat;
-            let lng = marker.getLatLng().lng;
-            document.getElementById("latitude").value = lat;
-            document.getElementById("longitude").value = lng;
-        });
-
-        map.on('click', function(e) {
-            marker.setLatLng(e.latlng);
-            document.getElementById("latitude").value = e.latlng.lat;
-            document.getElementById("longitude").value = e.latlng.lng;
-        });
-
-        // Auto get current location
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                let lat = position.coords.latitude;
-                let lng = position.coords.longitude;
-                map.setView([lat, lng], 14);
-                marker.setLatLng([lat, lng]);
-                document.getElementById("latitude").value = lat;
-                document.getElementById("longitude").value = lng;
-            });
-        }
     }
 </script>
+
 @endsection

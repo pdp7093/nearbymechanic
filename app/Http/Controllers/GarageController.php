@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\garage;
+use App\Models\repairers;
+use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 
 class GarageController extends Controller
@@ -13,7 +16,9 @@ class GarageController extends Controller
     public function index()
     {
         //
-        return view('repairer.garage');
+        $garage = repairers::join('garages', 'garages.repairer_id', '=', 'repairers.id')->select('garages.*')
+            ->first();
+        return view('repairer.garage', ['garage' => $garage]);
     }
 
     /**
@@ -22,7 +27,7 @@ class GarageController extends Controller
     public function create()
     {
         //
-        return view('repairer.garage-insert');
+        return view('repairer.garage_insert');
     }
 
     /**
@@ -31,6 +36,26 @@ class GarageController extends Controller
     public function store(Request $request)
     {
         //
+        $insert = new garage;
+        $insert->repairer_id= session("rid");
+        $insert->garage_name = $request->garage_name;
+        $insert->garage_address=$request->garage_address;
+        $insert->latitude=$request->latitude;
+        $insert->longitude=$request->longitude;
+        $insert->opentime=$request->opentime;
+        $insert->closetime=$request->closetime;
+        
+            
+        // img upload
+        $file=$request->file('garage_image');		
+        $filename=time().'_img.'.$request->file('garage_image')->getClientOriginalExtension();
+        $file->move('garage/',$filename);  // use move for move image in public/images
+        $insert->garage_image=$filename;
+
+        $insert->save();
+        Alert::success('Garage Added','Your Garage Added Successfully');
+        return redirect('garage.index');
+
     }
 
     /**
